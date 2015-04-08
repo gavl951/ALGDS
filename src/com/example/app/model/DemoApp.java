@@ -56,16 +56,19 @@ public class DemoApp {
                     if (Customers.isEmpty()) {
                         System.out.println("There are no customers in the database");
                     } else {
-                        System.out.printf("%10s %10s %15s %20s %15s %25"
-                                + "s\n", "id", "Name", "Email", "Mobile", "Address", "StaffNum");
+                        System.out.printf("%10s %10s %15s %20s %15s %25 %30"
+                                + "s\n", "id", "Name", "Email", "Mobile", "Address", "StaffNum", "BranchNo");
                         for (Customer pr : Customers) {
-                            System.out.printf("%10s %11s %25s %13s %20s %10s\n",
+                            System.out.printf("%10s %11s %25s %13s %20s %10s %15s\n",
                                     pr.getid(),
                                     pr.getName(),
                                     pr.getEmail(),
                                     pr.getMobile(),
                                     pr.getAddress(),
-                                    pr.getStaffNum());
+                                    pr.getStaffNum(),
+                                    pr.getBranchNo());
+                                    
+                            
                         }
                     }
                     System.out.println();
@@ -140,18 +143,19 @@ public class DemoApp {
 
     private static Customer readCustomer(Scanner keyb) {
         String Name, Email, Mobile, Address;
-        int id, StaffNum;
+        int id, StaffNum, BranchNo;
 
         Name = getString(keyb, "Enter Name: ");
         Email = getString(keyb, "Enter Email: ");
         Mobile = getString(keyb, "Enter Mobile: ");
         Address = getString(keyb, "Enter Address: ");
-        StaffNum = getInt(keyb, "Enter staff number: ", -1);
+        StaffNum = getInt(keyb, "Enter Staff number: ", -1);
+        BranchNo = getInt(keyb, "Enter Branch number: ", -1);
 
 
         Customer c
                 = new Customer(Name, Email, Mobile,
-                        Address, StaffNum);
+                        Address, StaffNum, BranchNo);
 
         return c;
     }
@@ -203,7 +207,7 @@ public class DemoApp {
 
     private static void editCustomerDetails(Scanner keyb, Customer c) {
         String Name, Email, Mobile, Address;
-        int StaffNum;
+        int StaffNum, BranchNo;
         String line1;
 
         Name = getString(keyb, "Enter name [" + c.getName() + "]: ");
@@ -211,6 +215,7 @@ public class DemoApp {
         Mobile = getString(keyb, "Enter Mobile [" + c.getMobile() + "]: ");
         Address = getString(keyb, "Enter Address [" + c.getAddress() + "]: ");
         StaffNum = getInt(keyb, "Enter Staff Number [" + c.getStaffNum() + "]: ", -1);
+        BranchNo = getInt(keyb, "Enter Branch [" + c.getBranchNo() + "]: ", -1);
 
         if (Name.length() != 0) {
             c.setName(Name);
@@ -226,6 +231,9 @@ public class DemoApp {
         }
         if (StaffNum != c.getStaffNum()) {
             c.setStaffNum(StaffNum);
+        }
+        if (BranchNo != c.getBranchNo()) {
+            c.setBranchNo(BranchNo);
         }
     }
 
