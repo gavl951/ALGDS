@@ -9,10 +9,12 @@ public class DemoApp {
     public static void main(String[] args) throws SQLException {
         Scanner keyboard = new Scanner(System.in);
 
-        Model model = Model.getInstance();
+        Model model;
 
-        int opt; //creating user interface
+        int opt = 9; //creating user interface
         do { //do while loop
+            try{
+                model = Model.getInstance();
             System.out.println("1. Create new Customer");
             System.out.println("2. Delete existing Customer");
             System.out.println("3. View all Customers");
@@ -120,7 +122,19 @@ public class DemoApp {
                 }
 
             }
-        } while (opt != 9); //stops
+            }
+            catch(DataAccessException e){
+                
+                System.out.println();
+                System.out.println(e.getMessage());
+                System.out.println();
+                
+                
+            }
+        
+        } 
+        
+        while (opt != 9); //stops
         System.out.println("Goodbye");
     }
 
@@ -142,7 +156,7 @@ public class DemoApp {
         return c;
     }
 
-    private static void deleteCustomer(Scanner kb, Model m) {
+    private static void deleteCustomer(Scanner kb, Model m) throws DataAccessException {
         int StaffNum = getInt(kb,"Enter the staff number of the customer to delete:", -1);
         Customer c;
 
@@ -170,7 +184,7 @@ public class DemoApp {
         return keyboard.nextLine();
     }
 
-    private static void editCustomer(Scanner kb, Model m) {
+    private static void editCustomer(Scanner kb, Model m) throws DataAccessException {
         int StaffNum = getInt(kb,"Enter the staff number of the customer to edit:", -1);
         Customer c;
 
@@ -234,7 +248,7 @@ public class DemoApp {
         return b;
     }
 
-    private static void deleteBranch(Scanner kb, Model m) {
+    private static void deleteBranch(Scanner kb, Model m) throws DataAccessException {
         int BranchNo = getInt(kb, "Enter the Branch Number of the Branch you want to delete:", -1); 
         Branch b;
 
@@ -262,7 +276,7 @@ public class DemoApp {
         return keyboard.nextLine();
     }
 
-    private static void editBranch(Scanner kb, Model m) {
+    private static void editBranch(Scanner kb, Model m) throws DataAccessException {
         int BranchNo = getInt(kb, "Enter the Branch Number of the Branch you want to edit:", -1); 
         Branch b;
 
