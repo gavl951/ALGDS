@@ -116,7 +116,7 @@ public class CustomerTableGateway {
         PreparedStatement stmt;
         int numRowsAffected;
 
-        query = "UPDATE" + TABLE_NAME + "SET "
+        query = " UPDATE " + TABLE_NAME + " SET "
                 + COLUMN_NAME + " = ?, "
                 + COLUMN_EMAIL + " = ?, "
                 + COLUMN_MOBILE + " = ?, "

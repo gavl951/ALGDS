@@ -56,19 +56,17 @@ public class DemoApp {
                     if (Customers.isEmpty()) {
                         System.out.println("There are no customers in the database");
                     } else {
-                        System.out.printf("%10s %10s %15s %20s %15s %25 %30"
-                                + "s\n", "id", "Name", "Email", "Mobile", "Address", "StaffNum", "BranchNo");
+                        System.out.printf("%10s %10s %16s %17s %15s %27s %14s"
+                                + "s\n", "id", "Name", "Address", "Mobile", "Email", "Staff Number", "Branch Number");
                         for (Customer pr : Customers) {
-                            System.out.printf("%10s %11s %25s %13s %20s %10s %15s\n",
+                            System.out.printf("%10s %11s %23s %13s %22s %9s %15s\n",
                                     pr.getid(),
                                     pr.getName(),
-                                    pr.getEmail(),
-                                    pr.getMobile(),
                                     pr.getAddress(),
+                                    pr.getMobile(),
+                                    pr.getEmail(),
                                     pr.getStaffNum(),
                                     pr.getBranchNo());
-                                    
-                            
                         }
                     }
                     System.out.println();
@@ -227,7 +225,7 @@ public class DemoApp {
             c.setMobile(Mobile);
         }
         if (Address.length() != 0) {
-            c.setName(Address);
+            c.setAddress(Address);
         }
         if (StaffNum != c.getStaffNum()) {
             c.setStaffNum(StaffNum);
