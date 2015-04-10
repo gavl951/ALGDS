@@ -42,6 +42,15 @@ public class Model {
         return new ArrayList<Customer>(this.Customers);
     }
 
+    public List<Customer> getCustomersByBranchNumber(int BranchNo) {
+        List<Customer> list = new ArrayList<Customer>();
+        for (Customer c : this.Customers){
+            if (c.getBranchNo() == BranchNo){
+                list.add(c);
+            }
+        }
+        return list;
+    }
     public boolean addCustomer(Customer c) throws SQLException {
         boolean result = false;
         int id;
