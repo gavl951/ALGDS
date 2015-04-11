@@ -23,16 +23,16 @@ public class Model {
     private BranchTableGateway Branchgateway;
     private List<Branch> Branches;
 
-    private Model() throws DataAccessException {
+    private Model() throws DataAccessException { //model connecting to DB
         try {
-            Connection conn = DBConnection.getInstance();
+            Connection conn = DBConnection.getInstance(); 
             this.gateway = new CustomerTableGateway(conn);
             this.Branchgateway = new BranchTableGateway(conn);
 
             this.Customers = this.gateway.getCustomers();
             this.Branches = this.Branchgateway.getBranches();
         } catch (ClassNotFoundException ex) {
-           throw new DataAccessException("Exception initialising Model Object: " +ex.getMessage());
+           throw new DataAccessException("Exception initialising Model Object: " +ex.getMessage()); //rethrow, error message.
         } catch (SQLException ex) {
             throw new DataAccessException("Exception initialising Model Object: " +ex.getMessage());
         }
@@ -54,7 +54,7 @@ public class Model {
     public boolean addCustomer(Customer c) throws SQLException {
         boolean result = false;
         int id;
-        id = this.gateway.insertCustomer(
+        id = this.gateway.insertCustomer( //returns an ID, values specified for parameters
                 c.getName(),
                 c.getEmail(),
                 c.getMobile(),

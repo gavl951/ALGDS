@@ -1,16 +1,16 @@
 package com.example.app.model;
 
-public class Customer implements Comparable<Customer>{
+public class Customer implements Comparable<Customer>{ //comparable interface
 
-    private int id;
-    private String Name;
+    private int id;             //attributes and values initialised and declared
+    private String Name;        //private so only visible to the class its in, also security reasons
     private String Email;
     private String Mobile;
     private String Address;
     private int StaffNum;
     private int BranchNo;
 
-    public Customer(int id, String n, String e, String m, String a, int sn, int br) {
+    public Customer(int id, String n, String e, String m, String a, int sn, int br) { //constructor takes ID
         this.id = id;
         this.Name = n;
         this.Email = e;
@@ -20,13 +20,13 @@ public class Customer implements Comparable<Customer>{
         this.BranchNo = br;
     }
 
-    public Customer(String n, String e, String m, String a, int sn, int br) {
+    public Customer(String n, String e, String m, String a, int sn, int br) { //constructor doesnt take ID
         this(-1, n, e, m, a, sn, br);
 
     }
 
-    public int getid() {
-        return id;
+    public int getid() { //get and set methods
+        return id;       //will make private variables public
     }
 
     public void setid(int id) {
@@ -80,12 +80,12 @@ public class Customer implements Comparable<Customer>{
         this.BranchNo = BranchNo;
     }
 
-    @Override
-    public int compareTo(Customer that) {
-        String myName = this.getName();
+    @Override               //method invoked on customer object
+    public int compareTo(Customer that) {   
+        String myName = this.getName(); //strings are compared based on name
         String yourName = that.getName();
         
-        return myName.compareTo(yourName);
+        return myName.compareTo(yourName);  
         
     }
 }

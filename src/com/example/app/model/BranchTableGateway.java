@@ -26,10 +26,10 @@ public class BranchTableGateway {
     }
 
     public int insertBranch(String a, int pn, String m, int h, int bno) throws SQLException {
-        String query;                   // the SQL query to execute
-        PreparedStatement stmt;         // the java.sql.PreparedStatement object used to execute the SQL query
-        int numRowsAffected;
-        int id = -1;
+        String query;                   //created a string variable to store the string I want to execute
+        PreparedStatement stmt;         //prepared that string for execution by creating a statement object 
+        int numRowsAffected;            //it will then return the amount of rows affected
+        int id = -1;                    //id will never be -1, if it is there is something wrong
 
         // the required SQL INSERT statement with place holders for the values to be inserted into the database
         query = "INSERT INTO " + TABLE_NAME + " ("
