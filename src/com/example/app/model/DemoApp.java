@@ -3,8 +3,13 @@ package com.example.app.model;
 import java.util.List;
 import java.sql.SQLException;
 import java.util.Scanner;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class DemoApp {
+    
+    private static final int NAME_ORDER = 1;
+    private static final int STAFFNUM_ORDER = 2;
 
     public static void main(String[] args) throws SQLException {
         Scanner keyboard = new Scanner(System.in);
@@ -17,18 +22,18 @@ public class DemoApp {
                 model = Model.getInstance();
             System.out.println(" 1. Create new Customer");
             System.out.println(" 2. Delete existing Customer");
-            System.out.println(" 3. View all Customers");
-            System.out.println(" 4. Edit a Customer");
-            System.out.println(" 5. View single Customers");
+            System.out.println(" 3. Edit a Customer");
+            System.out.println(" 4. View all Customers");
+            System.out.println(" 5. Order By Staff Number");
+            System.out.println(" 6. View single Customers");
             System.out.println();
-            System.out.println(" 6. Create new Branch");
-            System.out.println(" 7. Delete existing Branch");
-            System.out.println(" 8. View all Branch");
-            System.out.println(" 9. Edit a Branch");
-            System.out.println("10. Edit a Branch");
+            System.out.println(" 7. Create new Branch");
+            System.out.println(" 8. Delete existing Branch");
+            System.out.println(" 9. View all Branch");
+            System.out.println(" 10. Edit a Branch");
             System.out.println();
             System.out.println(" 11. Exit");
-            System.out.println();
+            System.out.println(); 
 
             opt = getInt(keyboard, "Enter option: ", 11);
 
@@ -36,7 +41,7 @@ public class DemoApp {
 
             switch (opt) { //used to display messages when a choice is chosen
                 case 1: {
-                    System.out.println("Creating customer");
+                    System.out.println("Creating customer...");
                     Customer c = readCustomer(keyboard);
                     if (model.addCustomer(c)) {
                         System.out.println("customer added");
@@ -47,46 +52,31 @@ public class DemoApp {
                     break;
                 }
                 case 2: {
-                    System.out.println("Deleting customer");
+                    System.out.println("Deleting customer...");
                     deleteCustomer(keyboard, model);
                     break;
                 }
                 case 3: {
-                    System.out.println("Viewing all customers");
-                    List<Customer> Customers = model.getCustomers();
-                    System.out.println();
-                    if (Customers.isEmpty()) {
-                        System.out.println("There are no customers in the database");
-                    } else {
-                        System.out.printf("%10s %10s %16s %17s %15s %27s %14s"
-                                + "s\n", "id", "Name", "Address", "Mobile", "Email", "Staff Number", "Branch");
-                        for (Customer pr : Customers) {
-                            Branch b = model.findBranchByBranchNumber(pr.getBranchNo());
-                            System.out.printf("%10s %11s %23s %13s %22s %9s %30s\n",
-                                    pr.getid(),
-                                    pr.getName(),
-                                    pr.getAddress(),
-                                    pr.getMobile(),
-                                    pr.getEmail(),
-                                    pr.getStaffNum(),
-                                    (b != null) ? b.getAddress() : "");
-                        }
-                    }
-                    System.out.println();
-                    break;
-                }
-                case 4: {
                     System.out.println("Edit Mode");
                     editCustomer(keyboard, model);
                     break;
                 }
+                case 4: {
+                    System.out.println("Viewing customers...");
+                    viewCustomers1(model, NAME_ORDER);
+                    break;
+                }
                  case 5: {
-                    System.out.println("Viewing single customers");
+                    System.out.println("Ordering by Staff Number..");
+                    viewCustomers1(model, STAFFNUM_ORDER);
+                    break;
+                }
+                  case 6: {
+                    System.out.println("Viewing individual Customers...");
                     viewCustomer(keyboard, model);
                     break;
                 }
-
-                case 6: {
+                case 7: {
                     System.out.println("Creating Branch");
                     Branch b = readBranch(keyboard);
                     if (model.addBranch(b)) {
@@ -97,34 +87,16 @@ public class DemoApp {
 
                     break;
                 }
-                case 7: {
-                    System.out.println("Deleting Branches");
+                case 8: {
+                    System.out.println("Deleting Branches...");
                     deleteBranch(keyboard, model);
                     break;
                 }
-                case 8: {
-                    System.out.println("Viewing all Branches");
-                    List<Branch> Branches = model.getBranches();
-                    System.out.println();
-                    if (Branches.isEmpty()) {
-                        System.out.println("There are no Branches in the database");
-                    } else {
-                        System.out.printf("%10s %10s %32s %15s %15s %19"
-                                + "s\n", "id", "Address", "Phone Number", "Manager", "Hours", "Branch Number");
-                        for (Branch pr : Branches) {
-                            System.out.printf("%10s %26s %13s %21s %10s %16s\n",
-                                    pr.getid(),
-                                    pr.getAddress(),
-                                    pr.getPhoneNumber(),
-                                    pr.getManager(),
-                                    pr.getHours(),
-                                    pr.getBranchNo());
-                        }
-                    }
-                    System.out.println();
-                    break;
-                }
                 case 9: {
+                    System.out.println("Viewing all Branches...");
+                    viewBranches1(keyboard, model);                    
+                }
+                case 10: {
                     System.out.println("Edit Mode");
                     editBranch(keyboard, model);
                     break;
@@ -143,7 +115,7 @@ public class DemoApp {
         
         } 
         
-        while (opt != 10); //stops
+        while (opt != 11); //stops
         System.out.println("Goodbye");
     }
 
@@ -203,12 +175,6 @@ public class DemoApp {
         }
     }
 
-    private static void viewCustomers(Model model) {
-        List<Customer> customers = model.getCustomers();
-        for (Customer pr : customers) {
-            System.out.println("Name: " + pr.getName());
-        }
-    }
 
     private static String getString(Scanner keyboard, String prompt) {
         System.out.print(prompt);
@@ -312,121 +278,23 @@ public class DemoApp {
     }
 
     private static void editBranch(Scanner kb, Model m) throws DataAccessException, SQLException {
+    int BranchNo = getInt(kb,"Enter the Branch Number of the Branch you want to edit:", -1);
+        Branch b;
 
-        Model model = Model.getInstance();
-
-        int opt; //creating user interface
-        do { //do while loop
-            System.out.println("1. Create new Customer");
-            System.out.println("2. Delete existing Customer");
-            System.out.println("3. View all Customers");
-            System.out.println("4. Edit a Customer");
-            System.out.println();
-            System.out.println("5. Create new Branch");
-            System.out.println("6. Delete existing Branch");
-            System.out.println("7. View all Branch");
-            System.out.println("8. Edit a Branch");
-            System.out.println();
-            System.out.println("9. Exit");
-            System.out.println();
-
-            opt = getInt(kb, "Enter option: ", 9);
-
-            System.out.println("You chose option " + opt);
-
-            switch (opt) { //used to display messages when a choice is chosen
-                case 1: {
-                    System.out.println("Creating customer");
-                    Customer c = readCustomer(kb);
-                    if (model.addCustomer(c)) {
-                        System.out.println("customer added");
-                    } else {
-                        System.out.println("customer not added");
-                    }
-
-                    break;
-                }
-                case 2: {
-                    System.out.println("Deleting customer");
-                    deleteCustomer(kb, model);
-                    break;
-                }
-                case 3: {
-                    System.out.println("Viewing all customers");
-                    List<Customer> Customers = model.getCustomers();
-                    System.out.println();
-                    if (Customers.isEmpty()) {
-                        System.out.println("There are no customers in the database");
-                    } else {
-                        System.out.printf("%10s %10s %15s %20s %15s %25"
-                                + "s\n", "id", "Name", "Email", "Mobile", "Address", "StaffNum");
-                        for (Customer pr : Customers) {
-                            System.out.printf("%10s %11s %25s %13s %20s %10s\n",
-                                    pr.getid(),
-                                    pr.getName(),
-                                    pr.getEmail(),
-                                    pr.getMobile(),
-                                    pr.getAddress(),
-                                    pr.getStaffNum());
-                        }
-                    }
-                    System.out.println();
-                    break;
-                }
-                case 4: {
-                    System.out.println("Edit Mode");
-                    editCustomer(kb, model);
-                    break;
-                }
-
-                case 5: {
-                    System.out.println("Creating Branch");
-                    Branch b = readBranch(kb);
-                    if (model.addBranch(b)) {
-                        System.out.println("Branch added");
-                    } else {
-                        System.out.println("Branch not added");
-                    }
-
-                    break;
-                }
-                case 6: {
-                    System.out.println("Deleting Branches");
-                    deleteBranch(kb, model);
-                    break;
-                }
-                case 7: {
-                    System.out.println("Viewing all Branches");
-                    List<Branch> Branches = model.getBranches();
-                    System.out.println();
-                    if (Branches.isEmpty()) {
-                        System.out.println("There are no Branches in the database");
-                    } else {
-                        System.out.printf("%10s %10s %32s %15s %15s %19"
-                                + "s\n", "id", "Address", "Phone Number", "Manager", "Hours", "Branch Number");
-                        for (Branch pr : Branches) {
-                            System.out.printf("%10s %26s %13s %21s %10s %16s\n",
-                                    pr.getid(),
-                                    pr.getAddress(),
-                                    pr.getPhoneNumber(),
-                                    pr.getManager(),
-                                    pr.getHours(),
-                                    pr.getBranchNo());
-                        }
-                    }
-                    System.out.println();
-                    break;
-                }
-                case 8: {
-                    System.out.println("Edit Mode");
-                    editBranch(kb, model);
-                    break;
-                }
-
+        b = m.findBranchByBranchNumber(BranchNo);
+        if (b != null) {
+            editBranchDetails(kb, b);
+            if (m.updateBranch(b)) {
+                System.out.println("Branch Updated");
+            } else {
+                System.out.println("Branch not updated");
             }
-        } while (opt != 9); //stops
-        System.out.println("Goodbye");
+        } else {
+            System.out.println("Branch not found");
+        }
     }
+        
+    
 
     private static void editBranchDetails(Scanner keyb, Branch b) {
         String Address, Manager;
@@ -475,5 +343,56 @@ public class DemoApp {
         while (!finished);
             
             return opt;
+    }
+
+    private static void viewCustomers1(Model model, int order) {
+        List<Customer> Customers = model.getCustomers();
+                    System.out.println();
+                    if (Customers.isEmpty()) {
+                        System.out.println("There are no customers in the database");
+                    } else {
+                        if (order == NAME_ORDER) {
+                        Collections.sort(Customers);
+                        }
+                        else{
+                            Comparator<Customer> cmpt = new StaffNumComparator();
+                            Collections.sort(Customers, cmpt);
+                        }
+                        System.out.printf("%10s %10s %16s %17s %15s %27s %14s"
+                                + "s\n", "id", "Name", "Address", "Mobile", "Email", "Staff Number", "Branch");
+                        for (Customer pr : Customers) {
+                            Branch b = model.findBranchByBranchNumber(pr.getBranchNo());
+                            System.out.printf("%10s %11s %23s %13s %22s %9s %30s\n",
+                                    pr.getid(),
+                                    pr.getName(),
+                                    pr.getAddress(),
+                                    pr.getMobile(),
+                                    pr.getEmail(),
+                                    pr.getStaffNum(),
+                                    (b != null) ? b.getAddress() : "");
+                        }
+                    }
+                    System.out.println();
+    }
+
+    private static void viewBranches1(Scanner keyboard, Model model) {
+        List<Branch> Branches = model.getBranches();
+                    System.out.println();
+                    if (Branches.isEmpty()) {
+                        System.out.println("There are no Branches in the database");
+                    } else {
+                        System.out.printf("%10s %10s %32s %15s %15s %19"
+                                + "s\n", "id", "Address", "Phone Number", "Manager", "Hours", "Branch Number");
+                        for (Branch pr : Branches) {
+                            System.out.printf("%10s %26s %13s %21s %10s %16s\n",
+                                    pr.getid(),
+                                    pr.getAddress(),
+                                    pr.getPhoneNumber(),
+                                    pr.getManager(),
+                                    pr.getHours(),
+                                    pr.getBranchNo());
+                        }
+                    }
+                    System.out.println();
     }
 }

@@ -1,6 +1,6 @@
 package com.example.app.model;
 
-public class Customer {
+public class Customer implements Comparable<Customer>{
 
     private int id;
     private String Name;
@@ -78,5 +78,14 @@ public class Customer {
 
     public void setBranchNo(int BranchNo) {
         this.BranchNo = BranchNo;
+    }
+
+    @Override
+    public int compareTo(Customer that) {
+        String myName = this.getName();
+        String yourName = that.getName();
+        
+        return myName.compareTo(yourName);
+        
     }
 }
